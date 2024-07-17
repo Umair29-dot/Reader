@@ -37,9 +37,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.reader.R
 import com.example.reader.component.CompAppToBar
-import com.example.reader.component.BookListCard
+import com.example.reader.component.CompBookListCard
 import com.example.reader.component.CompTitleSection
-import com.example.reader.model.MBook
+import com.example.reader.model.book.MBook
 import com.example.reader.navigation.AppScreens
 import com.example.reader.viewmodel.HomeViewModel
 
@@ -139,12 +139,13 @@ private fun HomeContent(navController: NavController, viewModel: HomeViewModel) 
 
 @Composable
 private fun ReadingRightNowArea(books: List<MBook>, navController: NavController) {
-	BookListCard(book = MBook(
+	CompBookListCard(book = MBook(
 		id = "1",
 		title = "Behind the enemy lines",
 		authors = "Umair",
 		notes = "A happy life"
-	))
+	)
+	)
 }
 
 @Composable
@@ -156,7 +157,7 @@ private fun BookListArea(list: List<MBook>, navController: NavController) {
 		.height(280.dp)
 		.horizontalScroll(scrollState)) {
 		for(book in list) {
-			BookListCard(book = book) {
+			CompBookListCard(book = book) {
 				//Todo: Navigate to detail Screen
 			}
 		}

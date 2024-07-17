@@ -1,6 +1,7 @@
 package com.example.reader.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -15,7 +16,8 @@ fun CompTextField(
 	value: String,
 	valueChange: MutableState<String>,
 	singleLine: Boolean = true,
-	title: String
+	title: String,
+	onAction: () -> Unit = {}
 ) {
 	OutlinedTextField(
 		value = value,
@@ -23,7 +25,10 @@ fun CompTextField(
 			valueChange.value = it
 		},
 		singleLine = singleLine,
-		label = { Text(title) }
+		label = { Text(title) },
+		keyboardActions = KeyboardActions {
+			onAction()
+		}
 	)
 }
 

@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,15 +41,15 @@ fun SignupScreen(navController: NavController) {
 	val signupViewModel: SignupViewModel = hiltViewModel()
 	val context = LocalContext.current
 
-	var email = remember {
+	var email = rememberSaveable {
 		mutableStateOf("")
 	}
 
-	var password = remember {
+	var password = rememberSaveable {
 		mutableStateOf("")
 	}
 
-	var againPassword = remember {
+	var againPassword = rememberSaveable {
 		mutableStateOf("")
 	}
 

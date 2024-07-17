@@ -1,4 +1,4 @@
-package com.example.reader.model
+package com.example.reader.model.user
 
 data class MUser(
 	val id: String? = null,

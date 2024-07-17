@@ -28,10 +28,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.reader.model.MBook
+import com.example.reader.model.book.MBook
 
 @Composable
-fun BookListCard(book: MBook, onClick: (String) -> Unit = {}) {
+fun CompBookListCard(book: MBook, onClick: (String) -> Unit = {}) {
 
 	val context = LocalContext.current
 	val resource = context.resources
