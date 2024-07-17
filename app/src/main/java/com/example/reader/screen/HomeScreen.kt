@@ -1,8 +1,5 @@
 package com.example.reader.screen
 
-import android.widget.ScrollView
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -16,57 +13,35 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardElevation
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberAsyncImagePainter
 import com.example.reader.R
-import com.example.reader.component.AppToBar
+import com.example.reader.component.CompAppToBar
 import com.example.reader.component.BookListCard
-import com.example.reader.component.BookRating
 import com.example.reader.component.CompTitleSection
 import com.example.reader.model.MBook
 import com.example.reader.navigation.AppScreens
 import com.example.reader.viewmodel.HomeViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,11 +52,11 @@ fun HomeScreen(navController: NavController) {
 
 	Scaffold(
 		topBar = {
-				 AppToBar(title = "Reader", showProfile = true, navController = navController)
+				 CompAppToBar(title = "Reader", showProfile = true, navController = navController)
 		},
 		floatingActionButton = {
 			FABContent {
-
+				navController.navigate(AppScreens.SearchScreen.name)
 			}
 		}
 	) {
@@ -191,8 +166,10 @@ private fun BookListArea(list: List<MBook>, navController: NavController) {
 
 
 @Composable
-private fun FABContent(onTap: (String) -> Unit) {
-	FloatingActionButton(onClick = { /*TODO*/ }) {
+private fun FABContent(onTap: () -> Unit) {
+	FloatingActionButton(onClick = {
+		onTap()
+	}) {
 		Icon(imageVector = Icons.Default.Add,
 			contentDescription = "Add a Book",
 		    tint = Color.White)

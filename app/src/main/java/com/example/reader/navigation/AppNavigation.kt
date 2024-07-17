@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.reader.screen.HomeScreen
 import com.example.reader.screen.LoginScreen
 import com.example.reader.screen.ProfileScreen
+import com.example.reader.screen.SearchScreen
 import com.example.reader.screen.SignupScreen
 import com.example.reader.screen.SplashScreen
 
@@ -31,6 +32,9 @@ fun AppNavigation() {
 		}
 		composable(route = AppScreens.ProfileScreen.name) {
 			ProfileScreen()
+		}
+		composable(route = AppScreens.SearchScreen.name) {
+			SearchScreen(navController = navController)
 		}
 	}
 
