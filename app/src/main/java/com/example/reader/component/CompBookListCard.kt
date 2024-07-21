@@ -29,9 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.reader.model.book.MBook
+import com.example.reader.model.book.MTest
 
 @Composable
-fun CompBookListCard(book: MBook, onClick: (String) -> Unit = {}) {
+fun CompBookListCard(book: MTest, onClick: (String) -> Unit = {}) {
 
 	val context = LocalContext.current
 	val resource = context.resources
@@ -45,7 +46,7 @@ fun CompBookListCard(book: MBook, onClick: (String) -> Unit = {}) {
 			.background(Color.White)
 			.padding(all = 8.dp)
 			.clickable {
-				onClick(book.title.toString())
+				//onClick(book.title.toString())
 			},
 		shape = RoundedCornerShape(30.dp)
 	) {

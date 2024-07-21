@@ -1,8 +1,10 @@
 package com.example.reader.screen
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,39 +15,51 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.reader.R
 import com.example.reader.component.CompAppToBar
 import com.example.reader.component.CompTextField
-import com.example.reader.model.book.MBook
+import com.example.reader.model.book.MBookItem
+import com.example.reader.navigation.AppScreens
+import com.example.reader.util.Resource
+import com.example.reader.viewmodel.BookSearchViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(navController: NavController) {
 	val context = LocalContext.current
+	val viewModel = hiltViewModel<BookSearchViewModel>()
 
 	Scaffold(
 		topBar = {
@@ -67,21 +81,13 @@ fun SearchScreen(navController: NavController) {
 				horizontalArrangement = Arrangement.Center
 			) {
 				SearchField(context) {
-					Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+					viewModel.getAllBooks(it)
 				}
 			}
 
 			Spacer(modifier = Modifier.height(20.dp))
 
-			LazyColumn(modifier = Modifier
-				.fillMaxSize()
-			) {
-				repeat(10) {
-					item {
-						BookListCardItem(book = MBook(id = "01", title = "Sunny", authors = "william", notes = null))
-					}
-				}
-			}
+			BooksContent(viewModel = viewModel, context, navController)
 		}
 	}
 }
@@ -106,10 +112,59 @@ private fun SearchField(context: Context, onSearch: (String) -> Unit = {}) {
 		keyboardController?.hide()
 	}
 }
+
 @Composable
-private fun BookListCardItem(book: MBook) {
+private fun BooksContent(viewModel: BookSearchViewModel, context: Context, navController: NavController) {
+	var resource = viewModel.listOfBooks.observeAsState().value
+
+	when(resource) {
+		is Resource.Loading -> {
+			Column(
+				modifier = Modifier
+					.fillMaxSize(),
+				verticalArrangement = Arrangement.Center,
+				horizontalAlignment = Alignment.CenterHorizontally
+			) {
+				CircularProgressIndicator()
+			}
+		}
+
+		is Resource.Success -> {
+			resource.data?.items?.let { items ->
+				LazyColumn(modifier = Modifier.fillMaxSize()) {
+					items(items) { BookListCardItem(item = it, navController) }
+				}
+			} ?: run {
+				Text(text = "No data found")
+			}
+		}
+
+		is Resource.Error -> {
+			Toast.makeText(context, resource.message.toString(), Toast.LENGTH_SHORT).show()
+		}
+
+		else -> {
+			Toast.makeText(context, "something went wrong", Toast.LENGTH_SHORT).show()
+		}
+	}
+}
+
+@Composable
+private fun BookListCardItem(item: MBookItem, navController: NavController) {
+	val imageUrl = item.volumeInfo.imageLinks?.thumbnail
+	val painter = if (imageUrl != null) {
+		rememberAsyncImagePainter(model = imageUrl)
+	} else {
+		painterResource(id = R.drawable.no_image)
+	}
+
 	Card(
-		modifier = Modifier.fillMaxWidth().padding(5.dp),
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(5.dp)
+			.clickable {
+					   navController.navigate(AppScreens.DetailScreen.name+"/${item.id}")
+			},
 		colors = CardDefaults.cardColors(Color.White),
 		elevation = CardDefaults.cardElevation(5.dp),
 		shape = RectangleShape
@@ -118,7 +173,7 @@ private fun BookListCardItem(book: MBook) {
 			modifier = Modifier
 				.padding(all = 5.dp)
 		) {
-			Image(painter = rememberAsyncImagePainter("https://cdn-media-1.freecodecamp.org/images/4wFagVnyKAt-oHg6CtqahLwJqkNpOTvUXwZv"),
+			Image(painter = painter,
 				  contentDescription = "A book",
 			      modifier = Modifier
 					  .width(100.dp)
@@ -126,23 +181,26 @@ private fun BookListCardItem(book: MBook) {
 			)
 
 			Column {
-				Text(text = book.title.toString(),
+				Text(text = item.volumeInfo.title.toString(),
 					maxLines = 1,
 					overflow = TextOverflow.Ellipsis,
-				    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 25.sp)
+				    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)
 				)
 				Spacer(modifier = Modifier.height(10.dp))
-				Text(text = "Author: ${book.authors.toString()}",
+				Text(text = "Author: Umair Nazim",
 					maxLines = 1,
-					overflow = TextOverflow.Clip
+					overflow = TextOverflow.Clip,
+					style = TextStyle(fontWeight = FontWeight.Thin)
 				)
-				Text(text = "Date: 2020-9-2",
+				Text(text = "Date: ${item.volumeInfo.publishedDate.toString()}",
 					maxLines = 1,
-					overflow = TextOverflow.Ellipsis
+					overflow = TextOverflow.Ellipsis,
+					style = TextStyle(fontWeight = FontWeight.Thin)
 				)
-				Text(text = "[Computers]",
+				Text(text = "Category: ${item.volumeInfo.categories}",
 					maxLines = 1,
-					overflow = TextOverflow.Ellipsis
+					overflow = TextOverflow.Ellipsis,
+					style = TextStyle(fontWeight = FontWeight.Thin)
 				)
 			}//: Column
 		}//: Row

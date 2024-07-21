@@ -40,9 +40,10 @@ import com.example.reader.component.CompAppToBar
 import com.example.reader.component.CompBookListCard
 import com.example.reader.component.CompTitleSection
 import com.example.reader.model.book.MBook
+import com.example.reader.model.book.MBookItem
+import com.example.reader.model.book.MTest
 import com.example.reader.navigation.AppScreens
 import com.example.reader.viewmodel.HomeViewModel
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,10 +75,9 @@ fun HomeScreen(navController: NavController) {
 private fun HomeContent(navController: NavController, viewModel: HomeViewModel) {
 
 	val booksList = listOf(
-		MBook(id = "11", "Awaz e Dost", authors = "Sunny", "A Great Book"),
-		MBook(id = "12", "The hunters", authors = "Robert William", "A Great Book"),
-		MBook(id = "13", "Darbar", authors = "Mirza Ghalib", "A Great Book"),
-		MBook(id = "14", "Android KMP", authors = "Umair Nazim", "A Great Book")
+		MTest(id = "1", "Awaz e Dost", author = "Umair"),
+		MTest(id = "2", "Sham o Safar", author = "Farooq"),
+		MTest(id = "3", "Android Master Class", author = "William")
 	)
 
 	Column(
@@ -138,18 +138,17 @@ private fun HomeContent(navController: NavController, viewModel: HomeViewModel) 
 }
 
 @Composable
-private fun ReadingRightNowArea(books: List<MBook>, navController: NavController) {
-	CompBookListCard(book = MBook(
+private fun ReadingRightNowArea(books: List<MTest>, navController: NavController) {
+	CompBookListCard(book = MTest(
 		id = "1",
 		title = "Behind the enemy lines",
-		authors = "Umair",
-		notes = "A happy life"
-	)
+		author = "Umair",
+	    )
 	)
 }
 
 @Composable
-private fun BookListArea(list: List<MBook>, navController: NavController) {
+private fun BookListArea(list: List<MTest>, navController: NavController) {
 	val scrollState = rememberScrollState()
 
 	Row(modifier = Modifier

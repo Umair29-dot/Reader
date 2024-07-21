@@ -2,9 +2,12 @@ package com.example.reader.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.reader.screen.DetailScreen
 import com.example.reader.screen.HomeScreen
 import com.example.reader.screen.LoginScreen
 import com.example.reader.screen.ProfileScreen
@@ -35,6 +38,15 @@ fun AppNavigation() {
 		}
 		composable(route = AppScreens.SearchScreen.name) {
 			SearchScreen(navController = navController)
+		}
+		composable(route = "${AppScreens.DetailScreen.name}/{bookId}", arguments = listOf(
+			navArgument("bookId") {
+				type = NavType.StringType
+			}
+		)) {
+			it.arguments?.getString("bookId").let {
+				DetailScreen(navController = navController, bookId = it.toString())
+			}
 		}
 	}
 
