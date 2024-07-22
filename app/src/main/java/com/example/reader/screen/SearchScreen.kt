@@ -151,7 +151,7 @@ private fun BooksContent(viewModel: BookSearchViewModel, context: Context, navCo
 
 @Composable
 private fun BookListCardItem(item: MBookItem, navController: NavController) {
-	val imageUrl = item.volumeInfo.imageLinks?.thumbnail
+	val imageUrl: String? = item.volumeInfo.imageLinks.thumbnail
 	val painter = if (imageUrl != null) {
 		rememberAsyncImagePainter(model = imageUrl)
 	} else {
@@ -187,7 +187,7 @@ private fun BookListCardItem(item: MBookItem, navController: NavController) {
 				    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)
 				)
 				Spacer(modifier = Modifier.height(10.dp))
-				Text(text = "Author: Umair Nazim",
+				Text(text = "Authors: ${item.volumeInfo.authors ?: ""}",
 					maxLines = 1,
 					overflow = TextOverflow.Clip,
 					style = TextStyle(fontWeight = FontWeight.Thin)

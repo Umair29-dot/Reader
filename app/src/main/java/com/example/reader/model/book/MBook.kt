@@ -12,10 +12,12 @@ data class MBookItem(
 
 data class MVolumeInfo(
 	val title: String?,
+	val authors: List<String>?,
 	val publishedDate: String?,
 	val pageCount: Int?,
 	val imageLinks: MImageLink,
-	val categories: List<String>
+	val description: String?,
+	val categories: List<String>?
 )
 
 data class MImageLink(
@@ -24,8 +26,7 @@ data class MImageLink(
 )
 
 data class MTest(
-	val id: String,
-	val title: String,
-	val author: String,
+	var id: String,
+	var title: String,
+	var author: String
 )
-
