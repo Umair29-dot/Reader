@@ -1,5 +1,7 @@
 package com.example.reader.screen
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -25,9 +28,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,14 +47,15 @@ import com.example.reader.component.CompTitleSection
 import com.example.reader.model.book.MBook
 import com.example.reader.model.book.MBookItem
 import com.example.reader.model.book.MTest
+import com.example.reader.model.firebase.MBookFirebase
+import com.example.reader.navigation.AppNavigation
 import com.example.reader.navigation.AppScreens
+import com.example.reader.util.Resource
 import com.example.reader.viewmodel.HomeViewModel
-
+import com.google.firebase.auth.FirebaseAuth
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
-
-	val viewModel = hiltViewModel<HomeViewModel>()
+fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
 
 	Scaffold(
 		topBar = {
@@ -74,11 +80,9 @@ fun HomeScreen(navController: NavController) {
 @Composable
 private fun HomeContent(navController: NavController, viewModel: HomeViewModel) {
 
-	val booksList = listOf(
-		MTest(id = "1", "Awaz e Dost", author = "Umair"),
-		MTest(id = "2", "Sham o Safar", author = "Farooq"),
-		MTest(id = "3", "Android Master Class", author = "William")
-	)
+	var listOfBooks = emptyList<MBookFirebase>()
+	val currentUser = FirebaseAuth.getInstance().currentUser
+	val resource = viewModel.books.observeAsState().value
 
 	Column(
 		modifier = Modifier
@@ -133,22 +137,42 @@ private fun HomeContent(navController: NavController, viewModel: HomeViewModel) 
 
 		Spacer(modifier = Modifier.height(10.dp))
 
-		BookListArea(list = booksList, navController = navController)
+		when(resource) {
+			is Resource.Loading -> {
+				CircularProgressIndicator()
+			}
+			is Resource.Success -> {
+				resource.data?.let {
+					listOfBooks = it.filter { book ->
+						book.userId == currentUser?.uid.toString()
+					}
+					BookListArea(list = listOfBooks, navController = navController)
+				}
+			}
+			is Resource.Error -> {
+				if (!resource.message.isNullOrEmpty()) {
+					Toast.makeText(LocalContext.current, resource.message.toString(), Toast.LENGTH_SHORT).show()
+				}
+			}
+			else -> {
+				Log.d("Nothing", "")
+			}
+		}
 	}//: Column
 }
 
 @Composable
 private fun ReadingRightNowArea(books: List<MTest>, navController: NavController) {
-	CompBookListCard(book = MTest(
-		id = "1",
-		title = "Behind the enemy lines",
-		author = "Umair",
-	    )
+	CompBookListCard(book = MBookFirebase(
+		title = "Hello",
+		photo = "https://cdn-media-1.freecodecamp.org/images/cxyJa1qZG5uNkwE2yOwLfOiyVDid7QVYTOj7",
+		authors = "lllklll"
+	)
 	)
 }
 
 @Composable
-private fun BookListArea(list: List<MTest>, navController: NavController) {
+private fun BookListArea(list: List<MBookFirebase>, navController: NavController) {
 	val scrollState = rememberScrollState()
 
 	Row(modifier = Modifier
@@ -157,7 +181,7 @@ private fun BookListArea(list: List<MTest>, navController: NavController) {
 		.horizontalScroll(scrollState)) {
 		for(book in list) {
 			CompBookListCard(book = book) {
-				//Todo: Navigate to detail Screen
+				navController.navigate(AppScreens.UpdateScreen.name+"/$it")
 			}
 		}
 	}
@@ -179,5 +203,5 @@ private fun FABContent(onTap: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
-	HomeScreen(navController = rememberNavController())
+	HomeScreen(navController = rememberNavController(), viewModel = hiltViewModel())
 }

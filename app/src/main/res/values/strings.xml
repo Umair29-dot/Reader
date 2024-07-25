@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Reader</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="loading">Loading....</string>
+    <string name="again_password">Again Password</string>
+    <string name="signup">Signup</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="user_added_successfully">User added successfully</string>
+    <string name="oops_something_went_wrong">Oops! something went wrong</string>
 </resources>

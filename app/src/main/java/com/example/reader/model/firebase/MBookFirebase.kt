@@ -6,7 +6,7 @@ import com.google.firebase.firestore.PropertyName
 
 data class MBookFirebase(
 	@Exclude //Don't include id while saving data into firebase
-	var id: String? = null,
+	var documentId: String? = null,
 	var title: String? = null,
 	var notes: String? = null,
 	var photo: String? = null,

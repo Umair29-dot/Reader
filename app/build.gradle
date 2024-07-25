@@ -101,4 +101,7 @@ dependencies {
 
     //GSON converter
     implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+
+    //To handle permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
 }

@@ -1,5 +1,6 @@
 package com.example.reader.component
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,10 +29,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.reader.model.book.MTest
+import com.example.reader.R
+import com.example.reader.model.firebase.MBookFirebase
 
 @Composable
-fun CompBookListCard(book: MTest, onClick: (String) -> Unit = {}) {
+fun CompBookListCard(book: MBookFirebase, onClick: (String) -> Unit = {}) {
 
 	val context = LocalContext.current
 	val resource = context.resources
@@ -45,7 +47,11 @@ fun CompBookListCard(book: MTest, onClick: (String) -> Unit = {}) {
 			.background(Color.White)
 			.padding(all = 8.dp)
 			.clickable {
-				//onClick(book.title.toString())
+				book.googleBookId?.let {
+					onClick(it)
+					return@clickable
+				}
+				Toast.makeText(context, R.string.oops_something_went_wrong, Toast.LENGTH_SHORT).show()
 			},
 		shape = RoundedCornerShape(30.dp)
 	) {
@@ -59,7 +65,7 @@ fun CompBookListCard(book: MTest, onClick: (String) -> Unit = {}) {
 					.padding(10.dp),
 				horizontalArrangement = Arrangement.SpaceBetween
 			) {
-				Image(painter = rememberAsyncImagePainter("https://cdn-media-1.freecodecamp.org/images/4wFagVnyKAt-oHg6CtqahLwJqkNpOTvUXwZv"),
+				Image(painter = rememberAsyncImagePainter(book.photo),
 					contentDescription = "Book Image",
 					modifier = Modifier
 						.height(140.dp)
@@ -76,13 +82,13 @@ fun CompBookListCard(book: MTest, onClick: (String) -> Unit = {}) {
 				}//: Column
 			}//: Row
 
-			Text(text = "Book title",
+			Text(text = book.title ?: "",
 				modifier = Modifier.padding(5.dp),
 				fontWeight = FontWeight.Bold,
 				maxLines = 2,
 				overflow = TextOverflow.Ellipsis) //Ellipsis means, if the text is large it will put ...
 
-			Text(text = "Author name",
+			Text(text = book.authors ?: "",
 				modifier = Modifier.padding(5.dp),
 				maxLines = 1,
 				overflow = TextOverflow.Ellipsis)

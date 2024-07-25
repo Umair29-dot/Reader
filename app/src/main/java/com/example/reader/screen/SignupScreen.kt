@@ -21,11 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.reader.R
 import com.example.reader.component.CompButton
 import com.example.reader.component.CompReaderLogo
 import com.example.reader.component.CompTextField
@@ -76,7 +78,7 @@ fun SignupScreen(navController: NavController) {
 			CompTextField(value = email.value,
 				valueChange = email,
 				singleLine = true,
-				title = "Email"
+				title = stringResource(id = R.string.email)
 			)
 
 			Spacer(modifier = Modifier
@@ -86,7 +88,7 @@ fun SignupScreen(navController: NavController) {
 			CompTextFieldPassword(value = password.value,
 				valueChange = password,
 				singleLine = true,
-				"Password",
+				stringResource(id = R.string.password),
 				passwordVisibility = passwordVisibility
 			)
 
@@ -97,7 +99,7 @@ fun SignupScreen(navController: NavController) {
 			CompTextFieldPassword(value = againPassword.value,
 				valueChange = againPassword,
 				singleLine = true,
-				"Again Password",
+				stringResource(R.string.again_password),
 				passwordVisibility = passwordVisibility
 			)
 
@@ -105,7 +107,7 @@ fun SignupScreen(navController: NavController) {
 				.height(25.dp)
 			)
 
-			CompButton(title = "Signup") {
+			CompButton(title = stringResource(R.string.signup)) {
 				signupViewModel.signupWithEmailAndPassword(email = email.value.trim(), password = password.value.trim())
 			}
 
@@ -114,10 +116,10 @@ fun SignupScreen(navController: NavController) {
 			)
 
 			Row{
-				Text(text = "Already have an account?",
+				Text(text = stringResource(R.string.already_have_an_account),
 				modifier = Modifier.padding(end = 5.dp)
 				)
-				Text(text = "Login",
+				Text(text = stringResource(id = R.string.login),
 					color = Color.Green,
 					modifier = Modifier
 						.clickable {
@@ -134,10 +136,10 @@ fun SignupScreen(navController: NavController) {
 		val data = signupViewModel.signupStatus.observeAsState().value
 		when(data) {
 			is Resource.Loading -> {
-				Toast.makeText(context, "Loading....", Toast.LENGTH_SHORT).show()
+				Toast.makeText(context, stringResource(id = R.string.loading), Toast.LENGTH_SHORT).show()
 			}
 			is Resource.Success -> {
-				Toast.makeText(context, "User added successfully", Toast.LENGTH_SHORT).show()
+				Toast.makeText(context, stringResource(R.string.user_added_successfully), Toast.LENGTH_SHORT).show()
 			}
 			is Resource.Error -> {
 				Toast.makeText(context, data.message.toString(), Toast.LENGTH_SHORT).show()
