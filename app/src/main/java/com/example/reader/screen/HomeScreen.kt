@@ -57,6 +57,8 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
 
+	val TAG: String = "HomeScreen"
+
 	Scaffold(
 		topBar = {
 				 CompAppToBar(title = "Reader", showProfile = true, navController = navController)
@@ -72,13 +74,13 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
 				.fillMaxSize()
 				.padding(it)
 		) {
-			HomeContent(navController = navController, viewModel = viewModel)
+			HomeContent(navController = navController, viewModel = viewModel, TAG = TAG)
 		}//: Column
 	}//: Scaffold
 }
 
 @Composable
-private fun HomeContent(navController: NavController, viewModel: HomeViewModel) {
+private fun HomeContent(navController: NavController, viewModel: HomeViewModel, TAG: String) {
 
 	var listOfBooks = emptyList<MBookFirebase>()
 	val currentUser = FirebaseAuth.getInstance().currentUser
@@ -155,7 +157,7 @@ private fun HomeContent(navController: NavController, viewModel: HomeViewModel) 
 				}
 			}
 			else -> {
-				Log.d("Nothing", "")
+				Log.d(TAG, "")
 			}
 		}
 	}//: Column

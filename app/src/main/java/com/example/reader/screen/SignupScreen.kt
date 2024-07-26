@@ -123,7 +123,7 @@ fun SignupScreen(navController: NavController) {
 					color = Color.Green,
 					modifier = Modifier
 						.clickable {
-							navController.navigate(AppScreens.LoginScreen.name)
+							navController.navigateUp()
 						}
 				)
 			}//: Row

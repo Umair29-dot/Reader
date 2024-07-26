@@ -28,6 +28,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,6 +60,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailScreen(navController: NavController, bookId: String) {
 
+	val TAG: String = "DetailScreen"
 	val snackBarScope = rememberCoroutineScope()
 	val snackbarHostState = remember {
 		SnackbarHostState()
@@ -66,7 +68,9 @@ fun DetailScreen(navController: NavController, bookId: String) {
 	val currentUser: String =  FirebaseAuth.getInstance().currentUser?.uid.toString()
 	val viewModel: DetailViewModel = hiltViewModel()
 
-	viewModel.getBookDetail(bookId)
+	LaunchedEffect(Unit) {
+		viewModel.getBookDetail(bookId)
+	}
 
 	Scaffold(
 		topBar = {
@@ -102,7 +106,7 @@ fun DetailScreen(navController: NavController, bookId: String) {
 						Toast.makeText(LocalContext.current, resource.message.toString(), Toast.LENGTH_SHORT).show()
 					}
 					else -> {
-						Log.d("dataa", "Nothing")
+						Log.d(TAG, "Nothing")
 					}
 				}
 
@@ -121,7 +125,7 @@ fun DetailScreen(navController: NavController, bookId: String) {
 					}
 				}
 				else -> {
-					Log.d("dataa", "Nothing")
+					Log.d(TAG, "Nothing")
 				}
 			}
 		}//: Surface
@@ -193,7 +197,7 @@ private fun BookDetailContent(currentBook: MBookItem, navController: NavControll
 				.fillMaxWidth(),
 			horizontalArrangement = Arrangement.SpaceEvenly
 		) {
-			CompRoundedButton(title = "Save", color = Color.Cyan) {
+			CompRoundedButton(title = "Save", color = MaterialTheme.colorScheme.primary) {
 
 				val book = MBookFirebase(
 					title = currentBook.volumeInfo.title,
@@ -211,7 +215,7 @@ private fun BookDetailContent(currentBook: MBookItem, navController: NavControll
 				viewModel.saveBookToFirebase(book)
 			}
 
-			CompRoundedButton(title = "Cancel", color = Color.Cyan) {
+			CompRoundedButton(title = "Cancel", color = MaterialTheme.colorScheme.primary) {
 				navController.popBackStack()
 			}
 		}//: Row

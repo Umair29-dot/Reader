@@ -11,6 +11,6 @@ fun ProfileScreen() {
 	Column(
 		modifier = Modifier.fillMaxSize()
 	) {
-		Text(text = "Profile Screen")
+		Text(text = "Under progress...")
 	}//: Column
 }

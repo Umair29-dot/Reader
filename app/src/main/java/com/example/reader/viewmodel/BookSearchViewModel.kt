@@ -20,7 +20,7 @@ class BookSearchViewModel @Inject constructor(private val repository: BookReposi
 	var listOfBooks: LiveData<Resource<MBook>> = _listOfBooks
 
 	init {
-		getAllBooks("android")
+		getAllBooks("success")
 	}
 
 	fun getAllBooks(searchQuery: String) {

@@ -68,13 +68,16 @@ fun CompAppToBar(
 		actions = {
 			if (showProfile) {
 				IconButton(onClick = {
-					FirebaseAuth.getInstance().signOut().run {
+					FirebaseAuth.getInstance().signOut()
+					navController.popBackStack()
+					navController.navigate(AppScreens.LoginScreen.name)
+					/*FirebaseAuth.getInstance().signOut().run {
 						navController.navigate(AppScreens.LoginScreen.name) {
 							popUpTo(AppScreens.SplashScreen.name){
 								inclusive = true
 							}
 						}
-					}
+					}*/
 				}) {
 					Icon(painter = painterResource(id = R.drawable.exit),
 						contentDescription = "Singout",

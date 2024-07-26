@@ -24,7 +24,6 @@ class LoginViewModel @Inject constructor(private val auth: FirebaseAuth): ViewMo
 			try{
 				auth.signInWithEmailAndPassword(email, password)
 					.addOnSuccessListener {
-						Log.d("testing", "user login successfully: ${it.user.toString()}")
 						it.user?.let {
 							_loginStatus.value = Resource.Success(data = it.toString())
 						}

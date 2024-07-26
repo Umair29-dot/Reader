@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -161,11 +162,10 @@ private fun BookListCardItem(item: MBookItem, navController: NavController) {
 	Card(
 		modifier = Modifier
 			.fillMaxWidth()
-			.padding(5.dp)
+			.padding(horizontal = 10.dp, vertical = 5.dp)
 			.clickable {
-					   navController.navigate(AppScreens.DetailScreen.name+"/${item.id}")
+				navController.navigate(AppScreens.DetailScreen.name + "/${item.id}")
 			},
-		colors = CardDefaults.cardColors(Color.White),
 		elevation = CardDefaults.cardElevation(5.dp),
 		shape = RectangleShape
 	) {

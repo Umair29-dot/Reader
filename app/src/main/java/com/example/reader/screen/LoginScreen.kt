@@ -116,6 +116,7 @@ fun LoginScreen(navController: NavController) {
 			Row{
 				Text(text = stringResource(R.string.dont_have_an_account),
 					modifier = Modifier.padding(end = 5.dp))
+
 				Text(text = "Singup",
 					color = Color.Green,
 					modifier = Modifier
@@ -136,6 +137,7 @@ fun LoginScreen(navController: NavController) {
 				Toast.makeText(context, stringResource(R.string.loading), Toast.LENGTH_SHORT).show()
 			}
 			is Resource.Success -> {
+				navController.popBackStack()
 				navController.navigate(AppScreens.HomeScreen.name)
 			}
 			is Resource.Error -> {

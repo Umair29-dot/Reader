@@ -48,7 +48,7 @@ class DetailViewModel @Inject constructor(private val repository: BookRepository
 				.add(book)
 				.addOnSuccessListener {
 					firestore.collection("books").document(it.id)
-						.update(hashMapOf("id" to it.id) as Map<String, Any>)
+						.update(hashMapOf("documentId" to it.id) as Map<String, Any>)
 						.addOnSuccessListener {
 							_status.value = Resource.Success("Saved")
 						}
